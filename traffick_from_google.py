@@ -1,4 +1,3 @@
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.chrome.options import DesiredCapabilities
@@ -11,8 +10,7 @@ from random import randint
 from lackey import *
 
 
-
-search_query_list = ['elektromotor vsetko pre priemysel','vibracny motor vsetko pre priemysel','prevodovky vsetko pre priemysel', 'Ozubene kolesa vsetko pre priemysel' ]
+search_query_list = ['vibracny motor', 'elektromotor' ]
 proxy_list = ['78.141.107.75:8080', '78.141.98.82:8080' ,'217.119.114.86:8080', '94.229.32.83:3128', '78.41.174.196:8081', '178.143.191.149:8080', '78.41.174.197:8081', '176.101.177.253:8080', '85.237.238.57:8080', '195.168.22.42:8080', '95.105.222.213:8080' ] 
 
 count = 0
@@ -56,17 +54,22 @@ for i in range(5000):
         search.send_keys(search_query)
         search.send_keys(Keys.RETURN)
         time.sleep(randint(5,15))
-        try:
-            elems = driver.find_element_by_xpath('//a[starts-with(@href,"https://www.vsetkoprepriemysel.sk")]').click()
-            time.sleep(randint(10,30))
-        except:
-            driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')         
-        # close the tab
-        # (Keys.CONTROL + 'w') on other OSs.
+        while True:
+            try:
+                time.sleep(randint(2,7))
+                elems = driver.find_element_by_xpath('//a[starts-with(@href,"https://www.vsetkoprepriemysel.sk")]').click()
+                time.sleep(randint(10,30))
+                break
+            except:  
+                
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(randint(2,5))
+                driver.find_element_by_xpath("//*[contains(local-name(), 'span') and contains(text(), 'Next')]").click()
+                pass
+
         driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 'w')
+
     driver.close()
     time.sleep(1)    
     print (count)
     print (proxy_list_query)
-    
-         
